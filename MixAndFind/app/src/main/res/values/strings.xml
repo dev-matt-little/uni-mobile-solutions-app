@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MixAndFind</string>
+    <string name="addNewColorButton">New Color</string>
+    <string name="textview">TextView</string>
+    <string name="color_name">Color name</string>
+    <string name="preview">Preview</string>
+    <string name="name_your_color">Name your color</string>
+    <string name="save_color">Save Color</string>
+    <string name="delete">Delete</string>
+</resources>
