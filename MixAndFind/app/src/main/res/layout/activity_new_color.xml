@@ -55,7 +55,8 @@
                 android:progressTint="@color/red_pale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:max="255"/>
 
             <SeekBar
                 android:id="@+id/greenBar"
@@ -68,7 +69,8 @@
                 android:progressTint="@color/green_pale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/redBar" />
+                app:layout_constraintTop_toBottomOf="@+id/redBar"
+                android:max="255"/>
 
             <SeekBar
                 android:id="@+id/blueBar"
@@ -81,7 +83,8 @@
                 android:progressTint="@color/blue_pale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/greenBar" />
+                app:layout_constraintTop_toBottomOf="@+id/greenBar"
+                android:max="255"/>
 
             <Button
                 android:id="@+id/saveColor"

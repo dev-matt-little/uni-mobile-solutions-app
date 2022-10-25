@@ -5,16 +5,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import static androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -86,6 +91,19 @@ public class MainActivity extends AppCompatActivity {
         activityResultLauncher.launch(openNewColorActivity);
     }
 
+    public void handleColorListItemPushed(View view) {
+        Intent openImageSearchActivity = new Intent(this, ImageSearchActivity.class);
+
+        ConstraintLayout colorListItemLayout = (ConstraintLayout) view;
+
+        TextView colorName = colorListItemLayout.findViewById(R.id.colorNameTextField);
+
+        openImageSearchActivity.putExtra(Constant.COLOR_ITEM_NAME_KEY, colorName.getText().toString());
+        openImageSearchActivity.putExtra(Constant.COLOR_ITEM_COLOR_CODE_KEY, ((ColorDrawable)view.getBackground()).getColor());
+
+        startActivity(openImageSearchActivity);
+    }
+
     private List<ColorListItem> getSavedColorItems(Bundle savedInstanceState) {
         List<ColorListItem> data = new ArrayList<>();
 
@@ -118,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
         if ((intent = result.getData()) != null && result.getResultCode() == RESULT_OK) {
             String itemName = intent.getStringExtra(Constant.COLOR_ITEM_NAME_KEY);
-            String itemColorCode = intent.getStringExtra(Constant.COLOR_ITEM_COLOR_CODE_KEY);
+            int itemColorCode = intent.getIntExtra(Constant.COLOR_ITEM_COLOR_CODE_KEY, 0);
 
             ColorListItem newItem = new ColorListItem(itemName, itemColorCode);
             data.add(newItem);

@@ -1,6 +1,5 @@
 package mate.kiss.mixandfind;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,7 @@ public class ColorListItemAdapter extends RecyclerView.Adapter<ColorListItemAdap
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         viewHolder.getLabel().setText(colorList.get(position).name);
-        viewHolder.getLayout().setBackgroundColor(Color.parseColor(colorList.get(position).colorCode));
+        viewHolder.getLayout().setBackgroundColor((colorList.get(position).colorCode));
     }
 
     @Override
@@ -50,7 +49,7 @@ public class ColorListItemAdapter extends RecyclerView.Adapter<ColorListItemAdap
             super(view);
 
             layout = view.findViewById(R.id.itemLayout);
-            label = view.findViewById(R.id.label);
+            label = view.findViewById(R.id.colorNameTextField);
 
             Button deleteButton = view.findViewById(R.id.deleteItemButton);
             deleteButton.setOnClickListener(v -> {
