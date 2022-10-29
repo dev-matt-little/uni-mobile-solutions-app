@@ -1,60 +1,38 @@
 package mate.kiss.mixandfind;
 
-
-import static java.util.concurrent.CompletableFuture.supplyAsync;
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-public class PexelsApiClient {
+public class PexelsApiClient extends ApiClientBase {
 
-    public CompletableFuture<String> GetPexelSearchResponse(ApiClientRequest request) throws IOException, ExecutionException, InterruptedException {
-        Uri.Builder uriBuilder = request.uri.buildUpon();
+    public List<PexelsPhotoDto> searchImagesAsync(ImageSearchData imageSearchData) throws IOException, ExecutionException, InterruptedException {
 
-        if (request.queryParams != null) {
-            for (Map.Entry<String, String> query : request.queryParams.entrySet()) {
-                uriBuilder.appendQueryParameter(query.getKey(), query.getValue());
-            }
-        }
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put(Constant.THEME_KEY, imageSearchData.keyword);
+        queryParams.put(Constant.IMAGES_COUNT_KEY, "1000");
+        queryParams.put(Constant.COLOR_KEY, String.format("#%06X", (0xFFFFFF & imageSearchData.color)));
 
-        Uri uri = uriBuilder.build();
-        return sendAsync(uri, "GET");
+        ApiClientRequest request = new ApiClientRequest(Uri.parse(Constant.PEXELS_SEARCH_URL), null, queryParams);
+
+        ApiClientResponse<PexelImageSearchResponseDto> response = getAsync(PexelImageSearchResponseDto.class, request).get();
+
+        return response.data.images;
     }
 
-    private CompletableFuture<String> sendAsync(Uri uri, String method) throws IOException, ExecutionException, InterruptedException {
+    public Bitmap getImage(String imageUrl) throws IOException, ExecutionException, InterruptedException {
+        ApiClientRequest request = new ApiClientRequest(Uri.parse(imageUrl), null, null);
 
-        URL url = new URL(uri.toString());
-        HttpURLConnection httpClient = (HttpURLConnection) url.openConnection();
+        ApiClientResponse<Bitmap> response = getAsync(Bitmap.class, request).get();
 
-        httpClient.setRequestMethod(method);
-        httpClient.setRequestProperty("Authorization", Constant.PEXELS_API_KEY);
-
-        String response = CompletableFuture.supplyAsync(() -> {
-            try {
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(httpClient.getInputStream()));
-                String inputLine;
-                StringBuilder content = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    content.append(inputLine);
-                }
-                in.close();
-                return content.toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }).get();
-
-        httpClient.disconnect();
-        return CompletableFuture.completedFuture(response);
+        return response.data;
     }
 }
